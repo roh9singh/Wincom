@@ -1,0 +1,75 @@
+import psutil
+
+
+
+def sendEmail(m,s):
+ 	try:
+ 	 server = smtplib.SMTP('smtp.gmail.com', 587)
+ 	 server.ehlo()
+ 	 server.starttls()
+
+
+ 	 server.login("UName", "Password")
+
+
+ 	 x=""
+
+
+ 	 for i in range(len(m)):
+ 	 	x=x+"\n"+str(m[i])+"     Free Space:"+str(s[i])+"GB  "
+
+ 	 msg = """From: Rohit Singh <EMAIL>
+ 	 To: WINCOM <Receiver>
+ 	 Subject: Servers Not Working
+ 	 
+
+ 	 This is a auto-generated e-mail message.
+ 	 
+
+ 	 The following drives are critical:
+ 	 
+
+ 	 """ + str(x) + """\n ok """
+
+ 	 receivers=['EMAIL1','EMAIL2']
+
+
+
+ 	 print("Sending Email to %s" % receivers)
+
+ 	 server.sendmail("FROM_EMAIL_ID", receivers, msg)
+ 	 server.quit()
+
+ 	except:
+ 	 print ('Something went wrong...')
+
+
+
+'''
+print(psutil.disk_usage(".").free)
+psutil.virtual_memory()
+'''
+
+d=psutil.disk_partitions()
+
+m=[]
+s=[]
+
+
+for i in range(len(d)):
+
+	try:
+
+	 FM=psutil.disk_usage(d[i][0])
+
+	 Total=int(FM[0])/(1024*1024*1024)
+	 Free=int(FM[2])/(1024*1024*1024)
+
+	 print("Disk %s has Total Space of %d GB and Free Space of %d GB" %(d[i][0],Total,Free))
+
+	 if (Free<10):
+	 	m.append(d[i][0])
+	 	s.append(Free)
+
+	except:
+		print ("Disk %s not found" %d[i][0])
